@@ -15,6 +15,7 @@ class Cart
     private ?int $id = null;
 
     #[ORM\Column]
+    // #[Assert\NULL]
     private ?int $user_id = null;
 
     #[ORM\OneToMany(targetEntity: CartItem::class, mappedBy: 'cart_id')]

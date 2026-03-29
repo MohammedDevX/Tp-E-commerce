@@ -1,0 +1,12 @@
+<?php
+
+namespace App\Services\Product;
+
+use App\Entity\Cart;
+use App\Entity\Product;
+
+interface CartInterface
+{
+    public function addCartToUser(int $id);
+    public function addItemToCart(Cart $cart, Product $product, int $quantity);
+}

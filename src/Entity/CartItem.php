@@ -53,8 +53,7 @@ class CartItem
 
     public function setQuantity(int $quantity): static
     {
-        $this->quantity = $quantity;
-
+        $this->quantity =+ $quantity;
         return $this;
     }
 }
