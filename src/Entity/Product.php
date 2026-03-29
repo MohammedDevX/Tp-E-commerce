@@ -2,8 +2,10 @@
 
 namespace App\Entity;
 
+use App\Entity\Category;
 use App\Repository\ProductRepository;
 use Doctrine\ORM\Mapping as ORM;
+use Symfony\Component\Validator\Constraints\Collection;
 
 #[ORM\Entity(repositoryClass: ProductRepository::class)]
 class Product
@@ -27,6 +29,9 @@ class Product
 
     #[ORM\ManyToOne(inversedBy: 'products')]
     private ?Category $category = null;
+
+    #[ORM\OneToMany(targetEntity: CartItem::class, mappedBy: 'product_id')]
+    private Collection $items;
 
     public function getId(): ?int
     {
@@ -103,5 +108,15 @@ class Product
         $this->category = $category;
 
         return $this;
+    }
+
+    /**
+     * Get the value of items
+     *
+     * @return Collection
+     */
+    public function getItems(): Collection
+    {
+        return $this->items;
     }
 }

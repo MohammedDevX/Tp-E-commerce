@@ -6,11 +6,11 @@ use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
-final class CategoriController extends AbstractController
+final class AuthController extends AbstractController
 {
-    #[Route('/categories/brows', name: 'app_brows_categori')]
+    #[Route('/login', name: 'app_login')]
     public function index(): Response
     {
-        return $this->render('files/browse_categories.html.twig');
+        return $this->render('files/login.html.twig');
     }
 }
