@@ -1,64 +1,88 @@
 {% extends 'base.html.twig' %}
-{% block title %}Product Details{% endblock %}
+
+{% block title %}{{ product.name }}{% endblock %}
+
 {% block body %}
 
-    <!-- Product Details Section -->
-    <div class="container my-5">
-        <div class="row">
-            <!-- Product Image -->
-            <div class="col-md-6">
-                <img src="airbod.png" class="img-fluid rounded" alt="Product">
+<div class="container my-5">
+    <div class="row">
+
+        <!-- Product Image -->
+        <div class="col-md-6">
+            <img src="{{ asset('images/' ~ product.image) }}"
+                 class="img-fluid rounded"
+                 alt="{{ product.name }}">
+        </div>
+
+        <!-- Product Info -->
+        <div class="col-md-6">
+
+            <nav aria-label="breadcrumb">
+                <ol class="breadcrumb">
+                    <li class="breadcrumb-item">
+                        <a href="{{ path('homepage') }}">Home</a>
+                    </li>
+                    <li class="breadcrumb-item active">Product Details</li>
+                </ol>
+            </nav>
+
+            <span class="badge bg-primary mb-3">
+                {{ product.category.name ?? 'Category' }}
+            </span>
+
+            <h1 class="mb-3">{{ product.name }}</h1>
+
+            <h3 class="text-success mb-4">
+                {{ product.price }} $
+            </h3>
+
+            <div class="mb-4">
+                <h5>Description</h5>
+                <p class="text-muted">
+                    {{ product.description }}
+                </p>
             </div>
 
-            <!-- Product Information -->
-            <div class="col-md-6">
-                <nav aria-label="breadcrumb">
-                    <ol class="breadcrumb">
-                        <li class="breadcrumb-item"><a href="index.html" class="text-decoration-none">Home</a></li>
-                        <li class="breadcrumb-item active" aria-current="page">Product Details</li>
-                    </ol>
-                </nav>
+            <!-- ✅ Symfony Form -->
+            {{ form_start(form) }}
 
-                <span class="badge bg-primary mb-3">Electronics</span>
-
-                <h1 class="mb-3">Wireless Headphones</h1>
-
-                <h3 class="text-success mb-4">$79.99</h3>
-
-                <div class="mb-4">
-                    <h5>Description</h5>
-                    <p class="text-muted">
-                        Experience premium sound quality with our wireless headphones.
-                        Featuring advanced noise cancellation technology, comfortable over-ear design,
-                        and up to 30 hours of battery life. Perfect for music lovers, travelers, and professionals.
-                        The foldable design makes them easy to carry, while the premium materials ensure durability
-                        and long-lasting comfort.
-                    </p>
-                </div>
-
-                <!-- Add to Cart Form -->
-                <form>
-                    <div class="mb-3">
-                        <label for="quantity" class="form-label">Quantity</label>
-                        <input type="number" class="form-control" id="quantity" name="quantity" value="1" min="1" max="10" style="max-width: 100px;">
-                    </div>
-
-                    <div class="d-grid gap-2 d-md-flex">
-                        <button type="submit" class="btn btn-primary btn-lg">Add to Cart</button>
-                        <a href="index.html" class="btn btn-outline-secondary btn-lg">Continue Shopping</a>
-                    </div>
-                </form>
-
-                <!-- Additional Info -->
-                <div class="mt-4 pt-4 border-top">
-                    <ul class="list-unstyled">
-                        <li class="mb-2"><strong>SKU:</strong> WH-2024-001</li>
-                        <li class="mb-2"><strong>Availability:</strong> <span class="text-success">In Stock</span></li>
-                        <li class="mb-2"><strong>Category:</strong> Electronics</li>
-                    </ul>
-                </div>
+            <div class="mb-3">
+                {{ form_label(form.quantity) }}
+                {{ form_widget(form.quantity, {
+                    'attr': {
+                        'class': 'form-control',
+                        'style': 'max-width: 100px;'
+                    }
+                }) }}
+                {{ form_errors(form.quantity) }}
             </div>
+
+            <div class="d-grid gap-2 d-md-flex">
+                <button type="submit" class="btn btn-primary btn-lg">
+                    Add to Cart
+                </button>
+
+                <a href="{{ path('homepage') }}" class="btn btn-outline-secondary btn-lg">
+                    Continue Shopping
+                </a>
+            </div>
+
+            {{ form_end(form) }}
+
+            <!-- Additional Info -->
+            <div class="mt-4 pt-4 border-top">
+                <ul class="list-unstyled">
+                    <li><strong>SKU:</strong> {{ product.id }}</li>
+                    <li>
+                        <strong>Availability:</strong>
+                        <span class="text-success">In Stock</span>
+                    </li>
+                    <li><strong>Category:</strong> {{ product.category.name ?? 'N/A' }}</li>
+                </ul>
+            </div>
+
         </div>
     </div>
+</div>
+
 {% endblock %}
-    {# <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script> #}

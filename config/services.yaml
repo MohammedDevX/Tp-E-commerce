@@ -1,5 +1,4 @@
 parameters:
-    
 
 services:
     _defaults:
@@ -9,4 +8,8 @@ services:
     App\:
         resource: '../src/'
 
+    App\Services\Cart\CartInterface:
+        alias: App\Services\Cart\CartHandler
 
+    App\Services\Product\ProductServiceInterface:
+        alias: App\Services\Product\ProductHandler

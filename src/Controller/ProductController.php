@@ -3,8 +3,13 @@
 namespace App\Controller;
 
 use App\Form\AddToCartType;
-use App\Services\Product\CartInterface;
+use App\Services\Cart\CartHandler;
+use App\Services\Cart\CartInterface;
+use App\Services\Product\PorductHandler;
+use App\Services\Product\ProducServicetInterface;
 use Symfony\Bundle\FrameworkBundle\Controller\AbstractController;
+use Symfony\Component\DependencyInjection\Attribute\Autowire;
+use Symfony\Component\HttpFoundation\Request;
 use Symfony\Component\HttpFoundation\Response;
 use Symfony\Component\Routing\Attribute\Route;
 
@@ -12,21 +17,34 @@ use Symfony\Component\Routing\Attribute\Route;
 final class ProductController extends AbstractController
 {
     public function __construct(
-        private CartInterface $productService
-    )
-    {}
+        #[Autowire(service: CartHandler::class)] private  CartInterface $cartService,
+        #[Autowire(service: PorductHandler::class)] private ProducServicetInterface $productService
+    ) {}
 
     #[Route('/details/{id}', name: 'app_product_detaille')]
-    public function getProductDetails(int $id): Response
+    public function getProductDetails(int $id, Request $request): Response
     {
+        $cart = $this->cartService->addCartToUser();
+        $product = $this->productService->getProduct($id);
+        if (!$product) {
+            throw $this->createNotFoundException('Product doesnt existe');
+        }
+
         $form = $this->createForm(AddToCartType::class);
+        $form->handleRequest($request);
 
         if ($form->isSubmitted() && $form->isValid()) {
-            $cart = $this->productService->addCartToUser($id);
-            $this->productService->addItemToCart();
-            return $this->redirectToRoute('task_success');
+            $data = $form->getData();
+            $quantity = $data['quantity'];
+            $this->cartService->addItemToCart($cart, $product, $quantity);
+            return $this->redirectToRoute('app_product_detaille', [
+                'id' => $id
+            ]);
         }
-        return $this->render('files/product_details.html.twig');
+        return $this->render('files/product_details.html.twig', [
+            'product' => $product,
+            'form' => $form->createView()
+        ]);
     }
 
     #[Route('/categori', name: 'app_product_by_categori')]
